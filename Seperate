@@ -1,1 +1,30 @@
+#still working on this code to gain full functionality, currently only prints the lowest file you answer "yes" to
 
+nov1 = input("would you like to open nov1?")
+nov10 = input("would you like to open nov10?")
+nov11 = input("would you like to open nov11?")
+
+if nov1 == "yes":
+    
+    f = open("C:/Users/jonescm16/Desktop/Court Calendars/court_calendar_Nov1.txt")
+    while True:
+        line = f.readline()
+        if line == "":            #if line is blank then break else print each line
+            break
+        print(line)
+elif nov10 =="yes":
+    f = open("C:/Users/jonescm16/Desktop/Court Calendars/court_calendar_Nov10.txt")
+    while True:
+        line = f.readline()
+        if line == "":            #if line is blank then break else print each line
+            break
+        print(line)
+elif nov11 =="yes":
+    f = open("C:/Users/jonescm16/Desktop/Court Calendars/court_calendar_Nov11.txt")
+    while True:
+        line = f.readline()
+        if line == "":            #if line is blank then break else print each line
+            break
+        print(line)
+else:
+    print("no dates selected")   
