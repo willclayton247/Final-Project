@@ -2,24 +2,39 @@
 All of our code for our final project
 CJonestest
 
-patternDate = r"^[0-9._]+/[0-9._]+/[0-9._]$"
-patternTime = r"^[0-9]+:[0-9]+[A-Z]$"
-patternCourtroom = r"^[a-zA-Z0-9._]$"
-patternCase = r"^[0-9]$"
-patternFile = r"^[a-zA-Z0-9._]+[a-zA-Z0-9._]$"
-patternDefendent = r"^[A-Z]+,[A-Z]+,[A-Z]$"
-patternComplainant = r"^[A-Z]+,[A-Z]+,[A-Z]$"
-patternAttorney = r"^[a-zA-Z0-9.+]+[A-Z.]+[A-Z]$"
-patternContinuance = r"^[0-9]$"
-patternFinger = r"^[a-zA-Z]$"
-patternBond = r"^[0-9]$"
-patternBType = r"^[A-Z]$"
-patternCharge = r"^[A-Z.]+[A-Z]+[A-Z]$"
-patternPlea = r"^[a-zA-Z]$"
-patternVer = r"^[a-zA-Z]$"
-patternCLS = r"^[a-zA-Z0-9]$"
-patternP = r"^[a-z]$"
-patternL = r"^[a-z]$"
-patternJudgement = r"^[a-zA-Z]$"
-patternADA = r"^[A-Z]$"
+import re
 
+file = input("Enter file name: ")
+
+f = open(file, "r")
+
+pattern = {
+
+    "Date" : r"^[0-9._]+/[0-9._]+/[0-9._]+$",
+    "Time" : r"^[0-9]{1,2}:[0-9]{2}[A-Z]$",
+    "Courtroom" : r"^[a-zA-Z0-9._]+$",
+    "Case" : r"^[0-9]+$",
+    "File" : r"^[a-zA-Z0-9._]+$",
+    "Defendent" : r"^[A-Z]+,[A-Z]+,[A-Z]+$",
+    "Complainant" : r"^[A-Z]+,[A-Z]+,[A-Z]+$",
+    "Attorney" : r"^[A-Za-z0-9.+]+$",
+    "Continuance" : r"^[0-9]+$",
+    "Finger" : r"^[a-zA-Z]+$",
+    "Bond" : r"^[0-9]+$",
+   "BType" : r"^[A-Z]+$",
+    "Charge" : r"^[A-Z.]+$",
+    "Plea" : r"^[a-zA-Z]+$",
+    "Ver" : r"^[a-zA-Z]+$",
+    "CLSp" : r"^[a-zA-Z0-9]+$",
+    "Pp" : r"^[a-z]+$",
+    "Lp" : r"^[a-z]+$",
+    "Judgement" : r"^[a-zA-Z]+$",
+    "ADAp" : r"^[A-Z]+$"
+
+}
+
+extracted = {}
+
+for line in f:
+    matches = re.findall(pattern, f)
+    extracted = matches
