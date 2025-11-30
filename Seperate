@@ -1,10 +1,8 @@
-#still working on this code to gain full functionality, currently only prints the lowest file you answer "yes" to
+nov1 = input("would you like to open nov1? (options: yes/no)")
+nov10 = input("would you like to open nov10? (options: yes/no)")
+nov11 = input("would you like to open nov11? (options: yes/no)")
 
-nov1 = input("would you like to open nov1?")
-nov10 = input("would you like to open nov10?")
-nov11 = input("would you like to open nov11?")
-
-if nov1 == "yes":
+if nov1 == "yes" and nov10 =="yes" and nov11 == "yes":
     
     f = open("C:/Users/jonescm16/Desktop/Court Calendars/court_calendar_Nov1.txt")
     while True:
@@ -12,19 +10,54 @@ if nov1 == "yes":
         if line == "":            #if line is blank then break else print each line
             break
         print(line)
-elif nov10 =="yes":
-    f = open("C:/Users/jonescm16/Desktop/Court Calendars/court_calendar_Nov10.txt")
+elif nov1 == "yes" and nov10 =="yes" and nov11 == "no":
+    f = open("C:/Users/jonescm16/Desktop/Court Calendars/court_calendar_Nov1.txt")
     while True:
         line = f.readline()
         if line == "":            #if line is blank then break else print each line
             break
         print(line)
-elif nov11 =="yes":
-    f = open("C:/Users/jonescm16/Desktop/Court Calendars/court_calendar_Nov11.txt")
+elif nov1 == "yes" and nov10 =="no" and nov11 == "yes":
+    f = open("C:/Users/jonescm16/Desktop/Court Calendars/court_calendar_Nov1.txt")
+    while True:
+        line = f.readline()
+        if line == "":            #if line is blank then break else print each line
+            break
+        print(line)
+elif nov1 == "yes" and nov10 =="no" and nov11 == "no":
+    f = open("C:/Users/jonescm16/Desktop/Court Calendars/court_calendar_Nov1.txt")
+    while True:
+        line = f.readline()
+        if line == "":            #if line is blank then break else print each line
+            break
+        print(line)
+elif nov1 == "no" and nov10 =="yes" and nov11 == "yes":
+    f = open("C:/Users/jonescm16/Desktop/Court Calendars/court_calendar_Nov1.txt")
+    while True:
+        line = f.readline()
+        if line == "":            #if line is blank then break else print each line
+            break
+        print(line)
+elif nov1 == "no" and nov10 =="yes" and nov11 == "no":
+    f = open("C:/Users/jonescm16/Desktop/Court Calendars/court_calendar_Nov1.txt")
+    while True:
+        line = f.readline()
+        if line == "":            #if line is blank then break else print each line
+            break
+        print(line)
+elif nov1 == "no" and nov10 =="no" and nov11 == "yes":
+    f = open("C:/Users/jonescm16/Desktop/Court Calendars/court_calendar_Nov1.txt")
+    while True:
+        line = f.readline()
+        if line == "":            #if line is blank then break else print each line
+            break
+        print(line)
+elif nov1 == "no" and nov10 =="no" and nov11 == "no":
+    f = open("C:/Users/jonescm16/Desktop/Court Calendars/court_calendar_Nov1.txt")
     while True:
         line = f.readline()
         if line == "":            #if line is blank then break else print each line
             break
         print(line)
 else:
-    print("no dates selected")   
+    print("Invalid selection")
