@@ -313,8 +313,6 @@ import re
 import csv
 
 def parse_court_calendar(file_path):
-    """Parse a court calendar text file and return structured data"""
-    
     f = open(file_path, 'r')
     lines = [line.rstrip() for line in f]
     f.close()
@@ -328,19 +326,15 @@ def parse_court_calendar(file_path):
     while i < len(lines):
         line = lines[i]
         
-        # Check for COURT DATE line
         if "COURT DATE:" in line:
-            # Extract date from "COURT DATE: 11/10/25"
             date = re.search(r'COURT DATE:\s*(\d{1,2}/\d{1,2}/\d{2,4})', line)
             if date:
                 current = date.group(1)
             
-            # Extract time from "TIME: 09:00 AM"
             time_match = re.search(r'TIME:\s*(\d{1,2}:\d{2}\s*[AP]M)', line)
             if time_match:
                 time = time_match.group(1)
             
-            # Extract courtroom from "COURTROOM NUMBER: 000B"
             courtroom_match = re.search(r'COURTROOM NUMBER:\s*([0-9]{3,4}[A-Z]?)', line)
             if courtroom_match:
                 room = courtroom_match.group(1)
@@ -348,15 +342,10 @@ def parse_court_calendar(file_path):
             i += 1
             continue
         
-        # Check for case entry line (starts with number, then file number, etc.)
-        # Format: NO.  FILE NUMBER DEFENDANT NAME        COMPLAINANT       ATTORNEY               CONT
-        # Example: 1  21CR 892470 ANDERSON,PATRICIA,CHARLES WYATT,DALLAS    ATTY:WAIVED               4
-        
-        # Look for lines that start with a number followed by spaces and a file number pattern
+
         case_match = re.match(r'^\s*(\d+)\s+(\d{2}[A-Z]{2}\s+\d{6})\s+([A-Z,]+)\s+([A-Z,]+)\s+(ATTY:[A-Z,]+|ATTY:WAIVED)\s+(\d+)\s*$', line)
         
         if case_match:
-            
             case_no = case_match.group(1)
             file_number = case_match.group(2)
             defendant = case_match.group(3)
@@ -364,7 +353,6 @@ def parse_court_calendar(file_path):
             attorney = case_match.group(5)
             continuance = case_match.group(6)
             
-            # Create case entry
             case_entry = {
                 "Court Date": current,
                 "Time": time,
@@ -384,8 +372,6 @@ def parse_court_calendar(file_path):
     return cases
 
 def write_to_csv(cases, output_file):
-    """Write parsed cases to CSV file"""
-    
     headers = ["Court Date", "Time", "Courtroom No", "Case No", "File Number", 
                "Defendant Name", "Complainant", "Attorney", "Continuance"]
     
@@ -397,9 +383,8 @@ def write_to_csv(cases, output_file):
     
     print(f"Successfully wrote {len(cases)} cases to {output_file}")
 
+
 def main():
-    """Main function to process court calendar files"""
-    
     file_map = {
         "nov1": "court_calendar_Nov1.txt",
         "nov10": "court_calendar_Nov10.txt",
@@ -409,7 +394,7 @@ def main():
     print("Court Calendar Parser")
     print("=" * 50)
     
-    # Ask user which files to process
+
     user_choices = {}
     for key in file_map:
         choice = input(f"Would you like to process {key}? (yes/no): ").strip().lower()
@@ -422,10 +407,10 @@ def main():
             opened_any = True
             csv_file = f"{key}.csv"
             
-            # Parse the court calendar
+
             cases = parse_court_calendar(txt_file)
             
-            # Write to CSV
+
             write_to_csv(cases, csv_file)
     
     if not opened_any:
@@ -433,3 +418,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
