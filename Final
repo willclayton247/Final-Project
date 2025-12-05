@@ -1,0 +1,145 @@
+"""This code is going to take an input of 1 of 3 text files containing court calendar information,
+go through that information line by line and extract certain details using regex. Then print all of 
+that information into a CSV."""
+
+
+import re
+import csv
+
+def parsecalendar(file_path): #Createds a function to parse the court calendar using regex
+
+    f = open(file_path, 'r')
+    lines = [line.rstrip() for line in f]
+    f.close()
+    
+    cases = []
+    current = ""
+    time = ""
+    room = ""
+    
+    i = 0
+    while i < len(lines): #Goes through each line of the file
+        line = lines[i]
+        
+        if "COURT DATE:" in line:
+            date = re.search(r'COURT DATE:\s*(\d{1,2}/\d{1,2}/\d{2,4})', line) #Extracting court dat
+            if date:
+                current = date.group(1)
+            
+            time_match = re.search(r'TIME:\s*(\d{1,2}:\d{2}\s*[AP]M)', line) #Extracting court time
+            if time_match:
+                time = time_match.group(1)
+            
+            courtroom_match = re.search(r'COURTROOM NUMBER:\s*([0-9]{3,4}[A-Z]?)', line) #Extracting courtoom
+            if courtroom_match:
+                room = courtroom_match.group(1)
+            
+            i += 1
+            continue
+        
+    
+        case_match = re.match(r'^\s*(\d+)\s+(\d{2}[A-Z]{2}\s+\d{6})\s+([A-Z,]+)\s+([A-Z,]+)\s+(ATTY:[A-Z,]+|ATTY:WAIVED)\s+(\d+)\s*$', line) #Extracting case details
+        
+        if case_match: #Storing details into variables
+            case_no = case_match.group(1)
+            file_number = case_match.group(2)
+            defendant = case_match.group(3)
+            complainant = case_match.group(4)
+            attorney = case_match.group(5)
+            continuance = case_match.group(6)
+            
+            #Creating values
+            fingerprint = ""
+            bond_amt = ""
+            bond_type = ""
+            charges = []
+            
+            
+            j = i + 1
+            while j < len(lines): #Looping through lines 
+                next_line = lines[j].strip()
+                
+                if next_line.startswith("BOND:"):
+                    bond_match = re.search(r'BOND:\s+\$(\d+)\s+([A-Z]+)', next_line) #Getting bond details
+                    if bond_match:
+                        bond_amt = bond_match.group(1)
+                        bond_type = bond_match.group(2)
+                
+                if next_line.startswith("(T)") or next_line.startswith("(M)") or next_line.startswith("(F)"):
+                    charge_match = re.match(r'\([TMF]\)(.+?)PLEA:', next_line) #Getting charge details
+                    if charge_match:
+                        charges.append(charge_match.group(1).strip())
+                
+                if re.match(r'^\s*\d+\s+\d{2}[A-Z]{2}\s+\d{6}', next_line): #Seeing if there is an additional case
+                    break
+                
+                j += 1
+            
+            charge_str = "; ".join(charges) if charges else "" #Creating a string
+            
+            case_entry = { #Creating a dictionary for each case
+
+                "Court Date": current,
+                "Time": time,
+                "Courtroom No": room,
+                "Case No": case_no,
+                "File Number": file_number,
+                "Defendant Name": defendant,
+                "Complainant": complainant,
+                "Attorney": attorney,
+                "Continuance": continuance,
+                "Needs fingerprinted": fingerprint,
+                "Bond AMT": bond_amt,
+                "Bond Type": bond_type,
+                "Charge": charge_str
+            }
+            
+            cases.append(case_entry) #Adding the dictionaryies
+        
+        i += 1
+    
+    return cases
+
+def writecsv(cases, output_file): #Function to write all of the data into a CSV
+    headers = ["Court Date", "Time", "Courtroom No", "Case No", "File Number", 
+               "Defendant Name", "Complainant", "Attorney", "Continuance", 
+               "Needs fingerprinted", "Bond AMT", "Bond Type", "Charge"]
+    
+    f = open(output_file, 'w', newline='', encoding='utf-8')
+    writer = csv.DictWriter(f, fieldnames=headers) #CSV writer
+    writer.writeheader()
+    writer.writerows(cases)
+    f.close()
+    
+    print(f"Successfully wrote {len(cases)} cases to {output_file}")
+
+
+def main(): #Main fucntion 
+
+    file_map = {
+
+        "nov1": "court_calendar_Nov1.txt",
+        "nov10": "court_calendar_Nov10.txt",
+        "nov11": "court_calendar_Nov11.txt"
+    }
+    
+    user_choices = {}
+    for key in file_map:
+        choice = input(f"Would you like to process {key}? (yes/no): ").strip().lower() #Asking which files to extract
+        user_choices[key] = choice
+    
+    opened_any = False 
+    
+    for key, txt_file in file_map.items(): #Going through selected files
+        if user_choices[key] == "yes":
+            opened_any = True
+            csv_file = f"{key}.csv"
+            
+            cases = parsecalendar(txt_file)
+            writecsv(cases, csv_file)
+    
+    if not opened_any: #Failsafe if no files selected
+        print("No files selected.")
+
+if __name__ == "__main__":
+    main()
