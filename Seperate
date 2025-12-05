@@ -1,4 +1,56 @@
-#new refinded code to get rid of the 8 elif statments - 12/4 CJ
+import csv
+import os
+
+# Map names to input file paths
+file_map = {
+    "nov1":  "C:/Users/jones/Desktop/Court Calendars/court_calendar_Nov1.txt",
+    "nov10": "C:/Users/jones/Desktop/Court Calendars/court_calendar_Nov10.txt",
+    "nov11": "C:/Users/jones/Desktop/Court Calendars/court_calendar_Nov11.txt"
+}
+
+# Collect user responses
+user_choices = {}
+for key in file_map:
+    user_choices[key] = input(f"Would you like to open {key}? (options: yes/no)").strip().lower()
+
+# Output CSV name
+output_csv = "combined_logs.csv"
+
+# Track if we add anything
+wrote_anything = False
+
+with open(output_csv, 'w', newline="") as out_file:
+    writer = csv.writer(out_file)
+
+    # Write header row once
+    writer.writerow(('NO.', 'FILE NUMBER', 'DEFENDANT NAME', 'COMPLAINANT', 'ATTORNEY', 'CONT'))
+
+    # Loop through each file selected by the user
+    for key, path in file_map.items():
+        if user_choices[key] == "yes":
+            wrote_anything = True
+
+            with open(path, 'r') as in_file:
+                stripped = (line.strip() for line in in_file)
+                lines = (line.split(",") for line in stripped if line)
+
+                # Append all lines to the single CSV
+                writer.writerows(lines)
+
+# If the user selected at least one file, open the CSV
+if wrote_anything:
+    os.startfile(output_csv)
+else:
+    print("Invalid selection — no files selected.")
+
+
+
+
+
+
+
+
+"""#new refinded code to get rid of the 8 elif statments - 12/4 CJ
 
 import csv
 import os
@@ -38,7 +90,7 @@ for key, path in file_map.items():
 
 # If the user said "no" to everything:
 if not opened_any:
-    print("no files selected.")
+    print("no files selected.")"""
 
 
 
