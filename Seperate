@@ -1,4 +1,65 @@
+#new refinded code to get rid of the 8 elif statments - 12/4 CJ
+
 import csv
+import os
+
+# Map input keys to filenames
+file_map = {
+    "nov1":  "C:/Users/jones/Desktop/Court Calendars/court_calendar_Nov1.txt",
+    "nov10": "C:/Users/jones/Desktop/Court Calendars/court_calendar_Nov10.txt",    #tried this without absolute path, not working on my end - CJ
+    "nov11": "C:/Users/jones/Desktop/Court Calendars/court_calendar_Nov11.txt"
+}
+
+# Ask the user if they wanna open each file
+user_choices = {}
+for key in file_map:
+    user_choices[key] = input(f"Would you like to open {key}? (options: yes/no)").strip().lower()
+
+# Track whether a valid choice was input
+opened_any = False
+
+for key, path in file_map.items():
+    if user_choices[key] == "yes":
+        opened_any = True
+        csv_name = f"{key}.csv" #names new files the same name as their .txt files .to .csv
+
+        # Read and write CSV
+        with open(path, 'r') as in_file:
+            stripped = (line.strip() for line in in_file)
+            lines = (line.split(",") for line in stripped if line)
+
+            with open(csv_name, 'w', newline="") as out_file:
+                writer = csv.writer(out_file)
+                writer.writerow(('NO.', 'FILE NUMBER', 'DEFENDANT NAME', 'COMPLAINANT', 'ATTORNEY', 'CONT'))
+                writer.writerows(lines)
+
+        # Open the CSV
+        os.startfile(csv_name)
+
+# If the user said "no" to everything:
+if not opened_any:
+    print("no files selected.")
+
+
+
+
+
+
+
+
+
+
+
+
+#IGNORE CODE BELOW
+
+
+
+
+
+
+#old code below---------------------------------- 
+"""import csv
 import os
 
 nov1 = input("would you like to open nov1? (options: yes/no)")
@@ -17,7 +78,7 @@ if nov1 == "yes" and nov10 =="no" and nov11 == "no":
     os.startfile("log1.csv")
 #7 other elif staments
 else:
-    print("Invalid selection")
+    print("Invalid selection")"""
 
 
 
